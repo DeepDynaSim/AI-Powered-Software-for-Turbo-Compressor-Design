@@ -257,3 +257,14 @@ Rathnakumar, A. S., et al. (2024). Bayesian entropy neural networks. arXiv. http
 Sunderland, E., et al. (2022). Multi-fidelity regression using artificial neural networks: Efficient approximation of parameterized simulations. Computer Methods in Applied Mechanics and Engineering, 389, 114378. https://doi.org/10.1016/j.cma.2021.114378
 
 Willard, J., Jia, X., Xu, S., Steinbach, M., & Kumar, V. (2022). Integrating scientific knowledge with machine learning for engineering and environmental systems. ACM Computing Surveys. https://doi.org/10.1145/3514228
+
+<img width="2048" height="2048" alt="InfoGraphic_TurboAI" src="https://github.com/user-attachments/assets/fce8ddcb-02b4-4b56-a385-8631c1111126" />
+<img width="1536" height="1024" alt="Design CFD-Geometry" src="https://github.com/user-attachments/assets/e7afcf49-e703-450c-99af-9ac8c619021b" />
+<img width="2151" height="1624" alt="output_ETA" src="https://github.com/user-attachments/assets/06f59dc0-6dd7-42c0-ba57-2adbb464cbc2" />
+<img width="2143" height="1624" alt="output_ENT" src="https://github.com/user-attachments/assets/a65664ad-c6dc-4213-b383-8f818bfabb48" />
+<img width="2127" height="1624" alt="output_ALPHA2" src="https://github.com/user-attachments/assets/02b716ec-183a-4fa7-93f1-1cb97978138a" />
+<img width="2143" height="1624" alt="output_TPR" src="https://github.com/user-attachments/assets/f3c83db4-7487-4fe3-8759-30e817b58e2e" />
+<img width="2151" height="1624" alt="output_VTH2" src="https://github.com/user-attachments/assets/fbda3632-c928-4916-bb48-3e569c7fa873" />
+<img width="2160" height="1630" alt="eta_focus" src="https://github.com/user-attachments/assets/44a933b9-dd4e-429f-8638-13c5471fa448" />
+
+
