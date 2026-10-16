@@ -115,16 +115,18 @@ Related work: [Satellite thermal preview control](https://github.com/DeepDynaSim
 
 ## References (selected)
 
+DOI, title and author metadata were checked against Crossref/DataCite during the documentation review. The compressor-cascade preprint and journal entry below are versions of the same work, not independent studies.
+
 
 Karniadakis, G. E., Kevrekidis, I. G., Lu, L., Perdikaris, P., Wang, S., & Yang, L. (2021). Physics-informed machine learning. Nature Reviews Physics, 3, 422–440. https://doi.org/10.1038/s42254-021-00314-5
 
-Karpatne, A., Atluri, G., Faghmous, J. H., Steinbach, M., Banerjee, A., Ganguly, A., … Kumar, V. (2017). Theory-guided data science: A new paradigm for scientific discovery from data. IEEE TKDE, 29(10), 2318–2331. https://doi.org/10.1109/TKDE.2017.2720198
+Karpatne, A., Atluri, G., Faghmous, J. H., Steinbach, M., Banerjee, A., Ganguly, A., … Kumar, V. (2017). Theory-guided data science: A new paradigm for scientific discovery from data. IEEE TKDE, 29(10), 2318–2331. https://doi.org/10.1109/TKDE.2017.2720168
 
-Li, W., Montomoli, F., & Sharma, R. (2024). An adaptive physics-informed neural network methodology for modelling industrial gas turbines. AIAA Journal. https://doi.org/10.2514/1.J063562
+Li, Z., Montomoli, F., & Sharma, S. (2024). Investigation of Compressor Cascade Flow Using Physics-Informed Neural Networks with Adaptive Learning Strategy. AIAA Journal. https://doi.org/10.2514/1.J063562
 
-Li, Z., Montomoli, F., & Sharma, S. (2023). Investigation of compressor cascade flow based on physics-informed neural networks. arXiv. https://doi.org/10.48550/arXiv.2308.04501
+Li, Z., Montomoli, F., & Sharma, S. (2023). Investigation of Compressor Cascade Flow Using Physics-Informed Neural Networks with Adaptive Learning Strategy. Earlier arXiv version of the AIAA article above. https://doi.org/10.48550/arXiv.2308.04501
 
-McClenny, L., & Braga-Neto, U. (2023). Self-adaptive physics-informed neural networks using a soft attention mechanism. Journal of Computational Physics, 474, 111722. https://doi.org/10.1016/j.jcp.2022.111722
+McClenny, L. D., & Braga-Neto, U. M. (2023). Self-adaptive physics-informed neural networks. Journal of Computational Physics, 474, 111722. https://doi.org/10.1016/j.jcp.2022.111722
 
 Pawar, S., San, O., Aksoylu, B., Rasheed, A., & Kvamsdal, T. (2021). Physics guided machine learning using simplified theories. Physics of Fluids, 33(1), 011701. https://doi.org/10.1063/5.0038929
 
@@ -132,8 +134,8 @@ Pawar, S., San, O., Vedula, P., Rasheed, A., & Kvamsdal, T. (2022). Multi-fideli
 
 Raissi, M., Perdikaris, P., & Karniadakis, G. E. (2019). Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear PDEs. Journal of Computational Physics, 378, 686–707. https://doi.org/10.1016/j.jcp.2018.10.045
 
-Rathnakumar, A. S., et al. (2024). Bayesian entropy neural networks. arXiv. https://doi.org/10.48550/arXiv.2407.01015
+Rathnakumar, R., Huang, J., Yan, H., & Liu, Y. (2024). Bayesian Entropy Neural Networks for Physics-Aware Prediction. arXiv. https://doi.org/10.48550/arXiv.2407.01015
 
-Sunderland, E., et al. (2022). Multi-fidelity regression using artificial neural networks: Efficient approximation of parameterized simulations. Computer Methods in Applied Mechanics and Engineering, 389, 114378. https://doi.org/10.1016/j.cma.2021.114378
+Guo, M., Manzoni, A., Amendt, M., Conti, P., & Hesthaven, J. S. (2022). Multi-fidelity regression using artificial neural networks: Efficient approximation of parameter-dependent output quantities. Computer Methods in Applied Mechanics and Engineering, 389, 114378. https://doi.org/10.1016/j.cma.2021.114378
 
 Willard, J., Jia, X., Xu, S., Steinbach, M., & Kumar, V. (2022). Integrating scientific knowledge with machine learning for engineering and environmental systems. ACM Computing Surveys. https://doi.org/10.1145/3514228
