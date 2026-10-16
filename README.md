@@ -1,240 +1,120 @@
-# AI-Powered-Software-for-Turbo-Compressor-Design
-Physics-guided surrogate modeling for turbomachinery: entropy/efficiency-consistent learning, residual correction, and robust external validation.
-# turbo-pgml (v35) — Physics-Guided Turbocompressor Surrogate
+# Physics-Guided AI for Turbocompressor Performance
 
-Physics-guided machine learning pipeline for turbocompressor performance prediction with a focus on **efficiency (ETA, η)** and **entropy (ENT)** generalization.  
-Includes **training**, **inference**, **external validation**, and a **MATLAB dashboard UI** for reporting.
+**DeepDynaSim Engineering & Consulting | MATLAB research workflow | turbo-pgml v35**
 
-## What this project does
+Predict turbocompressor performance with a surrogate that combines regression models, thermodynamic relationships and residual correction. This repository includes training, inference, evaluation data, a saved model and an interactive MATLAB reporting dashboard.
 
-This repository provides a complete MATLAB workflow to train and deploy a surrogate model that predicts:
+[Quick start](#quick-start) · [Method](#method-overview) · [Results](#results-and-reporting) · [Technical report](Report.pdf) · [Presentation](Generative_Turbo_Design_Presentation.pdf)
 
-- **ETA (η)** — compressor efficiency  
-- **TPR** — total pressure ratio  
-- **ENT** — entropy-related output (physics-consistent via dsfactor coupling)  
-- **ALPHA2**, **VTH2** — additional turbomachinery outputs
+## What you can explore
 
-The v35 pipeline is **physics-guided**: it blends data-driven learning with a thermodynamics-based relationship (via `dsfactor`) and uses a **gating / blending** mechanism to improve out-of-domain (external) performance for ETA.
+- Five outputs: efficiency **ETA**, total pressure ratio **TPR**, entropy-related **ENT**, **ALPHA2** and **VTH2**.
+- Physics-guided entropy coupling, residual learning and efficiency blending.
+- Internal cross-validation, holdout metrics and evaluation on a supplied external set.
+- Parity/residual plots, speed-bin diagnostics, CSV exports and PDF reporting.
 
-## Why it’s useful
+This is a research software workflow for performance prediction. Its scope is the implemented surrogate and evaluation tools; application to a new compressor or operating domain requires validation with suitable data.
 
-Classical CFD-based approaches can be expensive and may generalize poorly outside the training domain.  
-Purely data-driven models can overfit or violate physics constraints.
+## Repository map
 
-This project demonstrates a pragmatic “PGML” (Physics-Guided ML) approach:
+All MATLAB files currently live in the repository root.
 
-- Keeps the model **fast** (surrogate)
-- Improves **external** ETA/ENT robustness
-- Provides **reproducible reporting** (CSV + PDF + plots) via UI
-
-## Repository structure
-
-Recommended layout:
-├─ src/
-│ ├─ train_turbocompressor_model_v35.m
-│ ├─ predict_turbocompressor_model_v35.m
-│ ├─ run_v35_train_and_external.m
-│ ├─ sanity_check_ent_dsfactor_v35.m
-│ └─ turbo_results_dashboard_ui_v35.m
-├─ cfg_params_and_run_v35.m
-├─ input.mat
-├─ output.mat
-├─ (optional) ext_input.mat
-├─ (optional) ext_output.mat
-└─ README.md
-
-> **MAT format expectation**
-- `input.mat` contains a numeric matrix named `input` (or another numeric matrix field).
-- `output.mat` contains a numeric matrix named `output` with at least `N x 5`.
+| File | Purpose |
+| --- | --- |
+| [run_v35_train_and_external.m](run_v35_train_and_external.m) | Train and evaluate a configured experiment |
+| [train_turbocompressor_model_v35.m](train_turbocompressor_model_v35.m) | Fit the v35 surrogate |
+| [predict_turbocompressor_model_v35.m](predict_turbocompressor_model_v35.m) | Predict the five outputs |
+| [sanity_check_ent_dsfactor_v35.m](sanity_check_ent_dsfactor_v35.m) | Inspect entropy/physics consistency |
+| [turbo_results_dashboard_ui_v35.m](turbo_results_dashboard_ui_v35.m) | Visualize and export evaluation results |
+| [cfg_params_and_run_v35.m](cfg_params_and_run_v35.m) | Existing configuration example; review its data and tuning settings |
+| `input.mat`, `output.mat`, `ext_input.mat`, `ext_output.mat` | Included input/output matrices |
+| `turbo_model_v35.mat`, `turbo_external_report_v35.mat` | Saved model and report |
 
 ## Quick start
 
-### 1) Requirements
-- MATLAB (Statistics and Machine Learning Toolbox recommended for GPR / ensembles)
-- Your dataset files:
-  - `input.mat`
-  - `output.mat`
+Use MATLAB with Statistics and Machine Learning Toolbox for the regression models. Open MATLAB in the cloned repository directory. The dashboard uses MATLAB desktop UI components.
 
-### 2) Add paths
+```sh
+git clone https://github.com/DeepDynaSim/AI-Powered-Software-for-Turbo-Compressor-Design.git
+cd AI-Powered-Software-for-Turbo-Compressor-Design
+```
+
+### Inspect a saved model
+
 ```matlab
-addpath(genpath("src"));
+addpath(pwd);
+S = load("input.mat");
+X = double(load_matrix_any(S, "input"));
+Yhat = predict_turbocompressor_model_v35("turbo_model_v35.mat", X);
+% Columns: ETA, TPR, ENT, ALPHA2, VTH2
+```
 
-Train + evaluate (internal + external)
+### Train and evaluate
 
-Create or edit cfg_params_and_run_v35.m:
+Check the column meanings and working gas before running. Input and output rows must correspond; output columns are ordered as above. This example uses the included external filenames and explicitly disables external-label tuning.
 
-addpath(genpath("src"));
-
+```matlab
+addpath(pwd);
 cfg = struct();
-cfg.inputMat  = "input.mat";
+cfg.inputMat = "input.mat";
 cfg.outputMat = "output.mat";
-
-% External evaluation (can be same as internal if you don't have a separate set)
-cfg.extInputMat  = "input.mat";
-cfg.extOutputMat = "output.mat";
-
-% Column indices
-cfg.speedCol = 1;     % speed column index in X
-cfg.in23Col  = 23;    % input23 column index in X (used in dsfactor)
-cfg.gasName  = "air"; % "air" or "hydrogen"
-
-% Outputs
-cfg.modelOut  = "turbo_model_v35.mat";
+cfg.extInputMat = "ext_input.mat";
+cfg.extOutputMat = "ext_output.mat";
+cfg.speedCol = 1;
+cfg.in23Col = 23;
+cfg.gasName = "air";  % or "hydrogen", as appropriate for your data
+cfg.modelOut = "turbo_model_v35.mat";
 cfg.reportOut = "turbo_external_report_v35.mat";
-
-% Optional tuning
-cfg.etaTuneOnExternal = true;
-
+cfg.etaTuneOnExternal = false;
 run_v35_train_and_external(cfg);
+```
 
+Training writes the model/report paths above; use different filenames to retain the bundled artifacts. The existing configuration script uses the internal filenames for external evaluation and enables external-label tuning. Reusing training data is a demonstration, not independent validation. Any dataset used for tuning must be separated from the final untouched test set. Separate filenames alone do not establish independence.
 
-Run:
+### Open the dashboard
 
-cfg_params_and_run_v35
-
-Predict
-X = load("input.mat");         % or your new matrix
-Xmat = X.input;                % adapt if your field name differs
-
-Yhat = predict_turbocompressor_model_v35("turbo_model_v35.mat", Xmat);
-
-Dashboard UI (evaluation + export)
+```matlab
 turbo_results_dashboard_ui_v35( ...
-  "modelPath","turbo_model_v35.mat", ...
-  "extInput","input.mat", ...
-  "extOutput","output.mat", ...
-  "predictFcn","predict_turbocompressor_model_v35", ...
-  "speedIdx",1);
+    "modelPath", "turbo_model_v35.mat", ...
+    "extInput", "ext_input.mat", ...
+    "extOutput", "ext_output.mat", ...
+    "predictFcn", "predict_turbocompressor_model_v35", ...
+    "speedIdx", 1);
+```
 
+## Method overview
 
-The UI can export:
+1. **TPR:** select candidate regressors/transforms using cross-validation.
+2. **ETA:** fit engineered features in logit space and apply polynomial bias correction.
+3. **ENT:** couple efficiency, pressure ratio and the configured input column through the thermodynamic `dsfactor` relationship; learn a residual correction.
+4. **Efficiency blending:** combine the data-driven estimate with the physics-derived estimate using the v35 blending/gating model.
+5. **ALPHA2 and VTH2:** fit separate candidate regressors.
 
-metrics.csv, shift.csv, eta_bins.csv
+## Results and reporting
 
-per-output PNG figures
+The dashboard reports RMSE, MAE and R², input-shift summaries, parity plots and residuals. Exports include `metrics.csv`, `shift.csv`, `eta_bins.csv`, `rows_preview.csv`, output PNGs and a multipage PDF. Inspect [ETA](output_ETA.png), [TPR](output_TPR.png) and [ENT](output_ENT.png) plots already in the repository.
 
-a multi-page PDF report
+Label training, internal holdout, tuning and final external results separately when reporting an experiment. Report the dataset provenance, split, MATLAB/toolbox versions, gas choice and column definitions with the metrics.
 
-Method overview (v35)
+## Troubleshooting
 
-High-level stages:
+- **Missing function:** use the repository root as MATLAB current folder and run `addpath(pwd)`. There is no `src/` directory in this checkout.
+- **Unexpected entropy results:** check `in23Col`, `gasName` and the third output column.
+- **Regression/toolbox errors:** check Statistics and Machine Learning Toolbox availability.
+- **Different MAT field names:** inspect the matrices and use `load_matrix_any` or adjust the loading step.
 
-TPR model
-K-fold CV selection among candidate regressors/transforms.
+## Maintainers, collaboration and license
 
-ETA base model (data-driven)
+Maintained by **Caglar Uyulan, DeepDynaSim Engineering & Consulting Ltd. Co.** Contributor: **Sercan Acarer, SLC Fluidics Ltd.**
 
-Feature subset + engineered features (speed, log(speed), tpr, log(tpr), etc.)
+DeepDynaSim is an engineering R&D and consulting company in İzmir, Türkiye, working on physics-guided AI, simulation and control. For engineering collaboration: [support@deepdynasim.com](mailto:support@deepdynasim.com). For reproducible bugs or technical questions, [open an issue](https://github.com/DeepDynaSim/AI-Powered-Software-for-Turbo-Compressor-Design/issues) with the MATLAB version, toolbox list, configuration and a minimal example.
 
-Trained in logit(ETA) space
+Code is distributed under the [MIT license](LICENSE). When using this work academically, reference the repository commit or version and the applicable literature.
 
-Polynomial bias correction (0–2 degree)
+Related work: [Satellite thermal preview control](https://github.com/DeepDynaSim/satellite-thermal-preview-control) · [Deep Lyapunov functions](https://github.com/DeepDynaSim/DeepLyapunovFunction) · [Flexible-link manipulators](https://github.com/DeepDynaSim/Flexible-Link-Manipulators-Modelling-and-Control)
 
-ENT physics coupling via dsfactor
+## References (selected)
 
-Uses thermodynamic mapping:
-
-ds = dsfactor(eta, tpr, input23, consts)
-
-ENT is approximated as ENT ≈ a*ds + b (affine fit from data)
-
-Learns a residual correction in ds-space (DS_CORR)
-
-ETA physics inversion + blending (ETA-CYCLE / ETA-GATE)
-
-Inverts dsfactor to get eta_phys
-
-Blends eta_data and eta_phys using a tuned global w0
-
-Applies a gated fine-tune around w0 with safeguards to prevent collapse
-
-ALPHA2 & VTH2
-CV-selected regressors for remaining outputs.
-
-Results reporting
-
-Typical reporting outputs:
-
-Internal TrainVal OOF metrics (robust internal estimate)
-
-Internal Holdout Test metrics (sanity check)
-
-External validation metrics (the key KPI)
-
-For your project report, prioritize:
-
-External R²/RMSE for ETA and ENT
-
-ETA bin-by-speed error analysis (eta_bins.csv)
-
-Residual plots and parity plots (exported via UI)
-
-Troubleshooting
-
-“ENT/dsfactor sanity looks wrong”
-Check:
-
-cfg.in23Col points to the correct input23 column
-
-output.mat uses column 3 for ENT (i.e., Y(:,3) is ENT)
-
-gasName is correct (air vs hydrogen)
-
-Toolbox errors (GPR / ensembles)
-Ensure Statistics and Machine Learning Toolbox is installed.
-
-MAT field names differ
-The loader searches common alternatives, but best practice is:
-
-input.mat contains input
-
-output.mat contains output
-
-Where to get help
-
-Open an issue describing:
-
-MATLAB version
-
-Toolbox availability
-
-cfg settings
-
-Console logs (train + UI)
-
-Sample row/column descriptions (especially speed and input23)
-
-Maintainers
-
-Maintained by: Caglar Uyulan (DeepDynaSim Engineering & Consulting Ltd. Co.)
-
-Contributors: Sercan Acarer (SLC Fluidics Ltd.)
-
-Contributing
-
-Contributions are welcome. Please:
-
-Open an issue first (bug/feature request)
-
-Use clear commit messages
-
-Add minimal reproducible examples for changes
-
-(Optional) Add:
-
-docs/CONTRIBUTING.md
-
-CODE_OF_CONDUCT.md
-
-LICENSE
-
-CITATION.cff
-
-Citation
-
-If you use this repository in academic work, please cite the relevant literature below and reference this repository version/tag.
-
-References (selected)
 
 Karniadakis, G. E., Kevrekidis, I. G., Lu, L., Perdikaris, P., Wang, S., & Yang, L. (2021). Physics-informed machine learning. Nature Reviews Physics, 3, 422–440. https://doi.org/10.1038/s42254-021-00314-5
 
